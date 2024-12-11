@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Store E-commerce</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .product {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .product img {
+      max-width: 100px;
+      border-radius: 5px;
+    }
+
+    .product-details {
+      flex: 1;
+      margin-left: 20px;
+    }
+
+    .product-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .cart {
+      margin-top: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Local Store</h1>
+
+    <!-- Product Listing -->
+    <div id="product-list">
+      <div class="product">
+        <img src="https://via.placeholder.com/100" alt="Product 1">
+        <div class="product-details">
+          <h3>Product 1</h3>
+          <p>Description of Product 1</p>
+          <p>Price: $10</p>
+        </div>
+        <div class="product-actions">
+          <button onclick="addToCart('Product 1', 10)">Add to Cart</button>
+        </div>
+      </div>
+
+      <div class="product">
+        <img src="https://via.placeholder.com/100" alt="Product 2">
+        <div class="product-details">
+          <h3>Product 2</h3>
+          <p>Description of Product 2</p>
+          <p>Price: $20</p>
+        </div>
+        <div class="product-actions">
+          <button onclick="addToCart('Product 2', 20)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shopping Cart -->
+    <div class="cart">
+      <h2>Shopping Cart</h2>
+      <div id="cart-items"></div>
+      <p id="total-price">Total: $0</p>
+      <button onclick="checkout()">Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    const cart = [];
+
+    function addToCart(productName, price) {
+      const item = cart.find(item => item.name === productName);
+      if (item) {
+        item.quantity += 1;
+      } else {
+        cart.push({ name: productName, price, quantity: 1 });
+      }
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById('cart-items');
+      const totalPrice = document.getElementById('total-price');
+
+      cartItems.innerHTML = '';
+      let total = 0;
+
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <span>${item.name} x${item.quantity} - $${item.price * item.quantity}</span>
+          <button onclick="removeFromCart('${item.name}')">Remove</button>
+        `;
+        cartItems.appendChild(div);
+      });
+
+      totalPrice.textContent = `Total: $${total}`;
+    }
+
+    function removeFromCart(productName) {
+      const index = cart.findIndex(item => item.name === productName);
+      if (index > -1) {
+        cart.splice(index, 1);
+      }
+      updateCart();
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert('Your cart is empty.');
+        return;
+      }
+      alert('Thank you for your purchase!');
+      cart.length = 0;
+      updateCart();
+    }
+  </script>
+</body>
+</html>
